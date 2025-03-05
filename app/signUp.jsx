@@ -9,6 +9,7 @@ import { useRouter } from "expo-router";
 import { hp, wp } from "../helpers/common";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import { supabase } from "../lib/supabase";
 
 const SignUp = () => {
   const router = useRouter();
@@ -21,7 +22,36 @@ const SignUp = () => {
     if (!emailRef.current || !passwordRef.current) {
       Alert.alert("Signup", "Please fill all the fields!");
     }
+
+    let name = nameRef.current.trim();
+    let email = emailRef.current.trim();
+    let password = passwordRef.current.trim();
+
+    setLoading(true);
+
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name,
+        },
+      },
+    });
+
+    // console.log("Session: ", session);
+    // console.log("Error: ", error);
+
+    setLoading(false);
+
+    if (error) {
+      Alert.alert("Signup", error.message);
+    }
   };
+
   return (
     <ScreenWrapper bg="white">
       <StatusBar style="dark" />

@@ -1,0 +1,3 @@
+export const supabaseUrl = "https://dlpwauleaemrxcdjmtru.supabase.co";
+export const supabaseAnonKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRscHdhdWxlYWVtcnhjZGptdHJ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExOTE2NTksImV4cCI6MjA1Njc2NzY1OX0.tpldLpbP1QPPwIlgQsTeEouyf8FNO9D_fvN6oLY-_YQ";
