@@ -86,19 +86,29 @@ const UserHeader = ({ user, router, handleLogout }) => {
 
           <View style={{ gap: 10 }}>
             <View style={styles.info}>
-              <Icon name="mail" color={theme.colors.textLight} />
+              <Icon
+                name="mail"
+                color={theme.colors.textLight}
+                size={18}
+                strokeWidth={1.8}
+              />
               <Text style={styles.infoText}>{user && user.email}</Text>
             </View>
 
             {user && user.phoneNumber && (
               <View style={styles.info}>
-                <Icon name="call" color={theme.colors.textLight} />
+                <Icon
+                  name="call"
+                  color={theme.colors.textLight}
+                  size={18}
+                  strokeWidth={1.8}
+                />
                 <Text style={styles.infoText}>{user && user.phoneNumber}</Text>
               </View>
             )}
 
             {user && user.bio && (
-              <Text style={styles.infoText}>{user && user.email}</Text>
+              <Text style={styles.infoText}>{user && user.bio}</Text>
             )}
           </View>
         </View>

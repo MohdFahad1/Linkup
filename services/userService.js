@@ -9,21 +9,29 @@ export const getUserData = async (userId) => {
       .single();
 
     if (error) {
-      return {
-        success: false,
-        msg: error?.message,
-      };
+      return { success: false, msg: error?.message };
     }
 
-    return {
-      success: true,
-      data,
-    };
+    return { success: true, data };
   } catch (error) {
     console.log("Error fetching user data: ", error);
-    return {
-      success: false,
-      msg: error.message,
-    };
+    return { success: false, msg: error.message };
+  }
+};
+
+export const updateUser = async (userId, data) => {
+  try {
+    const { error } = await supabase
+      .from("users")
+      .update(data)
+      .eq("id", userId);
+
+    if (error) {
+      return { success: false, msg: error?.message };
+    }
+    return { success: true, data };
+  } catch (error) {
+    console.log("Error fetching user data: ", error);
+    return { success: false, msg: error.message };
   }
 };
