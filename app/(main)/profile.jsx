@@ -9,7 +9,6 @@ import {
 import React from "react";
 import ScreenWrapper from "../../components/ScreenWrapper";
 import { supabase } from "../../lib/supabase";
-import BackButton from "../../components/BackButton";
 import { userAuth } from "../../contexts/AuthContext";
 import { useRouter } from "expo-router";
 import Header from "../../components/Header";
@@ -46,7 +45,7 @@ const Profile = () => {
   };
 
   return (
-    <ScreenWrapper>
+    <ScreenWrapper bg="white">
       <UserHeader user={user} router={router} handleLogout={handleLogout} />
     </ScreenWrapper>
   );
