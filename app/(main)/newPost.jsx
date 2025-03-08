@@ -1,4 +1,5 @@
 import {
+  Alert,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -21,6 +22,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Image } from "react-native";
 import { getSupabaseFileUri } from "../../services/imageService";
 import { Video } from "expo-av";
+import { createOrUpdatePost } from "../../services/postService";
 
 const NewPost = () => {
   const { user } = userAuth();
@@ -80,7 +82,31 @@ const NewPost = () => {
     return getSupabaseFileUri(file)?.uri;
   };
 
-  const onSubmit = async () => {};
+  const onSubmit = async () => {
+    if (!bodyRef.current && !file) {
+      Alert.alert("Post", "Please choose an image or add post body");
+      return;
+    }
+
+    let data = {
+      file,
+      body: bodyRef.current,
+      userId: user?.id,
+    };
+
+    setLoading(true);
+    let res = await createOrUpdatePost(data);
+    setLoading(false);
+    // console.log("Post Result: ", res);
+    if (res.success) {
+      setFile(null);
+      bodyRef.current = "";
+      editorRef?.current?.setContentHTML("");
+      router.back();
+    } else {
+      Alert.alert("Post", res.msg);
+    }
+  };
 
   return (
     <ScreenWrapper bg="white">
