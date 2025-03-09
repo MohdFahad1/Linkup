@@ -1,5 +1,13 @@
-import { Alert, Button, Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import {
+  Alert,
+  Button,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import ScreenWrapper from "../../components/ScreenWrapper";
 import { StatusBar } from "expo-status-bar";
 import { hp, wp } from "../../helpers/common";
@@ -8,10 +16,28 @@ import Icon from "../../assets/icons";
 import { useRouter } from "expo-router";
 import Avatar from "../../components/Avatar";
 import { userAuth } from "../../contexts/AuthContext";
+import { fetchPosts } from "../../services/postService";
+import PostCard from "../../components/PostCard";
+
+var limit = 0;
 
 const Home = () => {
   const router = useRouter();
   const { user } = userAuth();
+
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
+  const getPosts = async () => {
+    limit = limit + 10;
+    let res = await fetchPosts(limit);
+    if (res.success) {
+      setPosts(res.data);
+    }
+  };
 
   return (
     <ScreenWrapper bg="white">
@@ -46,6 +72,17 @@ const Home = () => {
             </Pressable>
           </View>
         </View>
+
+        {/* posts */}
+        <FlatList
+          data={posts}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.listStyle}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <PostCard item={item} currentUser={user} router={router} />
+          )}
+        />
       </View>
     </ScreenWrapper>
   );
