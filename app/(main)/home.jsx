@@ -27,7 +27,7 @@ var limit = 0;
 const Home = () => {
   const router = useRouter();
   const { user } = userAuth();
-
+  const [hasMore, setHasMore] = useState(true);
   const [posts, setPosts] = useState([]);
 
   const handlePostEvent = async (payload) => {
@@ -49,17 +49,19 @@ const Home = () => {
       )
       .subscribe();
 
-    getPosts();
-
     return () => {
       supabase.removeChannel(postChannel);
     };
   }, []);
 
   const getPosts = async () => {
-    limit = limit + 10;
+    if (!hasMore) return null;
+    limit = limit + 4;
+    console.log("Fetchig posts with limit: ", limit);
+
     let res = await fetchPosts(limit);
     if (res.success) {
+      if (posts.length == res.data.length) setHasMore(false);
       setPosts(res.data);
     }
   };
@@ -107,10 +109,21 @@ const Home = () => {
           renderItem={({ item }) => (
             <PostCard item={item} currentUser={user} router={router} />
           )}
+          onEndReached={() => {
+            getPosts();
+            console.log("Got to the end");
+          }}
+          onEndReachedThreshold={0}
           ListFooterComponent={
-            <View style={{ marginVertical: posts.length == 0 ? 200 : 30 }}>
-              <Loading />
-            </View>
+            hasMore ? (
+              <View style={{ marginVertical: posts.length == 0 ? 200 : 30 }}>
+                <Loading />
+              </View>
+            ) : (
+              <View style={{ marginVertical: 30 }}>
+                <Text style={styles.noPosts}>No more posts</Text>
+              </View>
+            )
           }
         />
       </View>
