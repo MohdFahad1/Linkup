@@ -52,7 +52,7 @@ const NewPost = () => {
     }
   };
 
-  const isLocaleFile = (file) => {
+  const isLocalFile = (file) => {
     if (!file) return null;
     if (typeof file == "object") return true;
 
@@ -61,12 +61,12 @@ const NewPost = () => {
   const getFileType = (file) => {
     if (!file) return null;
 
-    if (isLocaleFile) {
+    if (isLocalFile) {
       return file.type;
     }
 
     // check image or video for remote file
-    if (file.includes("postImage")) {
+    if (file.includes("postImages")) {
       return "image";
     }
 
@@ -75,7 +75,7 @@ const NewPost = () => {
 
   const getFileUri = (file) => {
     if (!file) return null;
-    if (isLocaleFile(file)) {
+    if (isLocalFile(file)) {
       return file.uri;
     }
 
