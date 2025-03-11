@@ -1,4 +1,4 @@
-import { View, Text, LogBox } from "react-native";
+import { View, Text, LogBox, Platform } from "react-native";
 import React, { useEffect } from "react";
 import { Stack, useRouter } from "expo-router";
 import { AuthProvider, userAuth } from "../contexts/AuthContext";
@@ -51,7 +51,19 @@ const MainLayout = () => {
       screenOptions={{
         headerShown: false,
       }}
-    />
+    >
+      <Stack.Screen
+        name="(main)/postDetails"
+        options={{
+          presentation: Platform.select({
+            ios: "modal",
+            android: "containedTransparentModal",
+          }),
+          animation: "slide_from_bottom",
+          animationDuration: 100,
+        }}
+      />
+    </Stack>
   );
 };
 

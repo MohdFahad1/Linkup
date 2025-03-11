@@ -36,7 +36,13 @@ const tagsStyles = {
   },
 };
 
-const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
+const PostCard = ({
+  item,
+  currentUser,
+  router,
+  hasShadow = true,
+  showMoreIcon = true,
+}) => {
   const [likes, setLikes] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -52,7 +58,15 @@ const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
 
   const createdAt = moment(item?.created_at).format("MMM D");
 
-  const openPostDetails = async () => [];
+  const openPostDetails = async () => {
+    if (!showMoreIcon) return null;
+    router.push({
+      pathname: "postDetails",
+      params: {
+        postId: item?.id,
+      },
+    });
+  };
 
   const onLike = async () => {
     if (liked) {
@@ -114,14 +128,16 @@ const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
             <Text style={styles.postTime}>{createdAt}</Text>
           </View>
         </View>
-        <TouchableOpacity onPress={openPostDetails}>
-          <Icon
-            name="threeDotsHorizontal"
-            size={hp(3.4)}
-            strokeWidth={3}
-            color={theme.colors.text}
-          />
-        </TouchableOpacity>
+        {showMoreIcon && (
+          <TouchableOpacity onPress={openPostDetails}>
+            <Icon
+              name="threeDotsHorizontal"
+              size={hp(3.4)}
+              strokeWidth={3}
+              color={theme.colors.text}
+            />
+          </TouchableOpacity>
+        )}
       </View>
 
       {/* post body media */}
@@ -172,10 +188,10 @@ const PostCard = ({ item, currentUser, router, hasShadow = true }) => {
           <Text style={styles.count}>{likes?.length}</Text>
         </View>
         <View style={styles.footerButton}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={openPostDetails}>
             <Icon name="comment" size={24} color={theme.colors.textLight} />
           </TouchableOpacity>
-          <Text style={styles.count}>0</Text>
+          <Text style={styles.count}>{item?.comments[0]?.count}</Text>
         </View>
         <View style={styles.footerButton}>
           <TouchableOpacity onPress={onShare}>
