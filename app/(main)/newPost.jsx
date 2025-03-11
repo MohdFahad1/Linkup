@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ScreenWrapper from "../../components/ScreenWrapper";
 import Header from "../../components/Header";
 import { hp, wp } from "../../helpers/common";
@@ -15,7 +15,7 @@ import { theme } from "../../constants/theme";
 import Avatar from "../../components/Avatar";
 import { userAuth } from "../../contexts/AuthContext";
 import RichTextEditor from "../../components/RichTextEditor";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import Icon from "../../assets/icons";
 import Button from "../../components/Button";
 import * as ImagePicker from "expo-image-picker";
@@ -25,12 +25,23 @@ import { Video } from "expo-av";
 import { createOrUpdatePost } from "../../services/postService";
 
 const NewPost = () => {
+  const post = useLocalSearchParams();
   const { user } = userAuth();
   const bodyRef = useRef("");
   const editorRef = useRef(null);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(file);
+
+  useEffect(() => {
+    if (post && post.id) {
+      bodyRef.current = post.body;
+      setFile(post.file || null);
+      setTimeout(() => {
+        editorRef?.current?.setContentHTML(post.body);
+      }, 300);
+    }
+  }, []);
 
   const onPick = async (isImage) => {
     let mediaConfig = {
@@ -93,6 +104,10 @@ const NewPost = () => {
       body: bodyRef.current,
       userId: user?.id,
     };
+
+    if (post && post.id) {
+      data.id = post.id;
+    }
 
     setLoading(true);
     let res = await createOrUpdatePost(data);
@@ -173,7 +188,7 @@ const NewPost = () => {
         <Button
           buttonStyle={{ height: hp(6.2) }}
           loading={loading}
-          title="Post"
+          title={post && post.id ? "Update" : "Post"}
           hasShadow={false}
           onPress={onSubmit}
         />

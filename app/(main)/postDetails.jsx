@@ -127,7 +127,10 @@ const PostDetails = () => {
     }
   };
 
-  const onEditPost = async () => {};
+  const onEditPost = async (item) => {
+    router.back();
+    router.push({ pathname: "newPost", params: { ...item } });
+  };
 
   if (startLoading) {
     return (
