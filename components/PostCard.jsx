@@ -42,6 +42,9 @@ const PostCard = ({
   router,
   hasShadow = true,
   showMoreIcon = true,
+  showDelete = false,
+  onDelete = () => {},
+  onEdit = () => {},
 }) => {
   const [likes, setLikes] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -110,6 +113,21 @@ const PostCard = ({
     Share.share(content);
   };
 
+  const handleDeletePost = () => {
+    Alert.alert("Confirm", "Are you sure you want to do this?", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Modal Cancelled"),
+        style: "cancel",
+      },
+      {
+        text: "Delete",
+        onPress: () => onDelete(item),
+        style: "destructive",
+      },
+    ]);
+  };
+
   const liked = likes.filter((like) => like.userId == currentUser?.id)[0]
     ? true
     : false;
@@ -137,6 +155,17 @@ const PostCard = ({
               color={theme.colors.text}
             />
           </TouchableOpacity>
+        )}
+
+        {showDelete && currentUser.id == item?.user?.id && (
+          <View style={styles.actions}>
+            <TouchableOpacity onPress={() => onEdit(item)}>
+              <Icon name="edit" size={hp(2.5)} color={theme.colors.text} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleDeletePost}>
+              <Icon name="delete" size={hp(2.5)} color={theme.colors.rose} />
+            </TouchableOpacity>
+          </View>
         )}
       </View>
 
@@ -263,5 +292,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
+  },
+  actions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  count: {
+    color: theme.colors.text,
+    fontSize: hp(1.8),
   },
 });
