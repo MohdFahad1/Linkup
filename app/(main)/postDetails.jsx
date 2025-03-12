@@ -96,6 +96,17 @@ const PostDetails = () => {
     setLoading(false);
 
     if (res.success) {
+      if (user.id != post.userId) {
+        //send notification
+        let notify = {
+          senderId: user.id,
+          receiveId: post.userId,
+          title: "commented on you post",
+          data: JSON.stringify({ postId: post.id, commentId: res?.data?.id }),
+        };
+
+        createNotification(notify);
+      }
       inputRef?.current?.clear();
       commentRef.current = "";
     } else {
@@ -197,6 +208,7 @@ const PostDetails = () => {
               key={comment?.id?.toString()}
               item={comment}
               onDelete={onDeleteComment}
+              highlisht={comment.id == commentId}
               canDelete={user.id == comment.userId || user.id == post.userId}
             />
           ))}
